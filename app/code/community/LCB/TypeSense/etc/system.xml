@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <lcbrq translate="label" module="lcb_typesense">
+            <label><![CDATA[<a href="http://lcbrq.com" target="_blank" style="position:absolute;margin-top:1px;display:inline-block;width:14px;height:14px;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AgNFQYr+IEdYwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAILSURBVCjPPZG9a5NhFMV/5z7P+6ZSiNUOjVpdSkljBT/AQUEnUSpKwaDYoYNLRPAPUPE/0NEpi2A2MYo4FJwUWgS/6lIwCK0oxSrSSmxj6pu8j0PeeuEuF84595wjshk9fUveWQGoSCoDRSHM1DBZXVLV+3jl7eMbAUAAxTO3I8SEFGpCeZmRiz2xi0iSLt2QItSU2bTJZt49uZmoeOqW8O488FQSBBgazDN17ijHj4xwr/aCuflF4sgjCUmTSSc880S+ANRMAqDTTTlY2svVyydZb20iZ9ADbG2tr8+NGaIiKY/AzAgSzhkA1YezvHz9iVzsQSAJcy5vzlV8QOUtxiCxY3s/46O7AWi1k0zNMjWQM8xc2UtWtAzYSVNKI7u4cuEYX76t8Xl5Fe89mCEBMoKMgIqGM7CeD2fGWrPFx8Xv9G+LyeUiggCJQOYxq8+QGpjACRc5lpbXePT8A4MD/ewZGiDpBrKwMwCI0DBhdUnZyZGksP7nLwCHxobZV9hJmvI/1dAjqZuZquCaUu9dM7H6u01zo83ZEyUOl4bpBjDzyBxgTaDqhg5MbgSlC+bclMlwzvPzV4vZ+SXeLHxlYfEH7c0OzlwvC7gUzL8XwPjFu5HJJiTVJOUVep06J0IImITJmsC0FGZePbiebIXE/vIdRVFUkFSRVBYqCjBZw6AOVH1sK3P3rwWAf9iKmFTdFDAjAAAAAElFTkSuQmCC')"></a><b style="padding-left: 19px">LCBRQ</b>]]></label>
+            <sort_order>1200</sort_order>
+        </lcbrq>
+    </tabs>
+    <sections>
+        <lcb_typesense translate="label" module="lcb_typesense">
+            <label>TypeSense</label>
+            <tab>lcbrq</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>999</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <connection translate="label"> 
+                    <label>Settings</label>
+                    <sort_order>999</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <host translate="label">
+                            <label>Host</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry</validate>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </host>
+                        <collection_name translate="label">
+                            <label>Collection Name</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry</validate>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </collection_name>                        
+                        <admin_api_key translate="label">
+                            <label>Admin API Key</label>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <validate>required-entry</validate>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </admin_api_key>                        
+                        <search_only_api_key translate="label">
+                            <label>Search Only API Key</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry</validate>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </search_only_api_key>
+                    </fields>
+                </connection>
+            </groups>
+        </lcb_typesense>
+    </sections>
+</config>

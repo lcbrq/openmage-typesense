@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout>
+
+    <lcb_typesense_search_index>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="lcb_typesense/product_search_list" template="catalog/product/list.phtml" />
+        </reference>
+    </lcb_typesense_search_index>
+
+</layout>

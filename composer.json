@@ -1,0 +1,12 @@
+{
+    "name": "lcbrq/openmage-typesense",
+    "license": ["commercial"],
+    "type": "openmage-module",
+    "description": "Basic approach to lightning-fast, open source TypeSense search for OpenMage.",
+    "require": {
+        "typesense/typesense-php": "*"
+    },
+    "extra": {
+        "magento-root-dir": "test/"
+    }
+}

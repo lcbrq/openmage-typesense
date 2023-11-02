@@ -1,0 +1,5 @@
+app/code/community/LCB/TypeSense
+app/design/frontend/base/default/layout/lcb_typesense.xml
+app/design/frontend/base/default/template/lcb_typesense
+app/etc/modules/LCB_TypeSense.xml
+shell/typesense.php
