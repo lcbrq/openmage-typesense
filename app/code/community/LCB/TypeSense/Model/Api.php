@@ -77,6 +77,11 @@ class LCB_TypeSense_Model_Api
                 'name' => 'visibility',
                 'type' => 'int32',
             ],
+            [
+                'name' => 'category_ids',
+                'type' => 'string[]',
+                'optional' => true
+            ],
         ];
         foreach ($attributes as $attribute) {
             if (!in_array($attribute->getAttributeCode(), ['sku', 'status', 'visibility'])) {

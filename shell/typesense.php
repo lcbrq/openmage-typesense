@@ -28,6 +28,7 @@ class LCB_TypeSense_Shell extends Mage_Shell_Abstract
                     $payload = [
                         'id' => (string) $product->getId(),
                         'sku' => (string) $product->getSku(),
+                        'category_ids' => $product->getCategoryIds(),
                     ];
                     foreach ($attributes as $attribute) {
                         $code = $attribute->getAttributeCode();
@@ -35,6 +36,8 @@ class LCB_TypeSense_Shell extends Mage_Shell_Abstract
                             $payload[$code] = (float) $product->getData($code);
                         } elseif (in_array($code, ['status', 'visibility'])) {
                             $payload[$code] = (int) $product->getData($code);
+                        } elseif ($attribute->getFrontendInput() === 'select') {
+                            $payload[$code] = (string) $product->getAttributeText($code);
                         } else {
                             $payload[$code] = (string) $product->getData($code);
                         }
