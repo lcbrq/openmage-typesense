@@ -17,20 +17,29 @@ class LCB_TypeSense_Shell extends Mage_Shell_Abstract
             $client = Mage::getModel('lcb_typesense/api')->getAdminClient();
             $collection = Mage::getModel('catalog/product')->getCollection();
             $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
-            $collection->addAttributeToSelect('*');
+
+            $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
+            foreach ($attributes as $attribute) {
+                $collection->addAttributeToSelect($attribute->getAttributeCode());
+            }
             Mage::dispatchEvent('lcb_typesense_catalog_product_collection_reindex_before', array('collection' => $collection));
             foreach ($collection as $product) {
                 try {
-                    $response = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert(
-                        [
-                            'id' => (string) $product->getId(),
-                            'name' => (string) $product->getName(),
-                            'sku' => (string) $product->getSku(),
-                            'short_description' => (string) $product->getShortDescription(),
-                            'description' => (string) $product->getDescription(),
-                        ]
-                    );
-
+                    $payload = [
+                        'id' => (string) $product->getId(),
+                        'sku' => (string) $product->getSku(),
+                    ];
+                    foreach ($attributes as $attribute) {
+                        $code = $attribute->getAttributeCode();
+                        if ($attribute->getBackendType() === 'decimal') {
+                            $payload[$code] = (float) $product->getData($code);
+                        } elseif (in_array($code, ['status', 'visibility'])) {
+                            $payload[$code] = (int) $product->getData($code);
+                        } else {
+                            $payload[$code] = (string) $product->getData($code);
+                        }
+                    }
+                    $response = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert($payload);
                     $this->writeln($product->getSku());
                 } catch (Exception $e) {
                     $this->writeln($e->getMessage());

@@ -63,26 +63,32 @@ class LCB_TypeSense_Model_Api
      */
     public function createCollection()
     {
+        $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
+        $fields = [
+            [
+                'name' => 'sku',
+                'type' => 'string',
+            ],
+            [
+                'name' => 'status',
+                'type' => 'int32',
+            ],
+            [
+                'name' => 'visibility',
+                'type' => 'int32',
+            ],
+        ];
+        foreach ($attributes as $attribute) {
+            if (!in_array($attribute->getAttributeCode(), ['sku', 'status', 'visibility'])) {
+                $fields[] = [
+                    'name' => $attribute->getAttributeCode(),
+                    'type' => $attribute->getTypeSenseType(),
+                ];
+            }
+        }
         $payload = [
             'name' => Mage::helper('lcb_typesense')->getCollectionName(),
-            'fields' => [
-                [
-                    'name' => 'name',
-                    'type' => 'string',
-                ],
-                [
-                    'name' => 'sku',
-                    'type' => 'string',
-                ],
-                [
-                    'name' => 'short_description',
-                    'type' => 'string',
-                ],
-                [
-                    'name' => 'description',
-                    'type' => 'string',
-                ],
-            ],
+            'fields' => $fields,
         ];
 
         $this->getAdminClient()->collections->create($payload);
@@ -102,12 +108,18 @@ class LCB_TypeSense_Model_Api
                 'ids' => [],
             ];
 
-            $results = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->search(
-                [
-                    'q' => $query,
-                    'query_by' => 'name',
-                ]
-            );
+            $queryBy = ['name'];
+            $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
+            foreach ($attributes as $attribute) {
+                if (!in_array($attribute->getAttributeCode(), ['status', 'visibility'])) {
+                    $queryBy[] = $attribute->getAttributeCode();
+                }
+            }
+            $payload = [
+                'q' => $query,
+                'query_by' => implode(',', $queryBy),
+            ];
+            $results = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->search($payload);
 
             if (!empty($results['found'])) {
                 $result['count'] = $results['found'];
