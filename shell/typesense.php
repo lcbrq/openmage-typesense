@@ -24,6 +24,7 @@ class LCB_TypeSense_Shell extends Mage_Shell_Abstract
             }
             Mage::dispatchEvent('lcb_typesense_catalog_product_collection_reindex_before', array('collection' => $collection));
             foreach ($collection as $product) {
+                Mage::dispatchEvent('lcb_typesense_catalog_product_reindex_before', array('product' => $product));
                 try {
                     $payload = [
                         'id' => (string) $product->getId(),
