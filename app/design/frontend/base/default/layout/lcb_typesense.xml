@@ -8,7 +8,9 @@
             </action>
         </reference>
         <reference name="content">
-            <block type="lcb_typesense/product_search_list" template="catalog/product/list.phtml" />
+            <block type="lcb_typesense/product_search_list" name="catalog.product.search" template="catalog/product/list.phtml">
+                <block type="lcb_typesense/product_search_facets" name="searchFaces" as="searchFaces" template="lcb/typesense/facets.phtml"/>
+            </block>
         </reference>
     </lcb_typesense_search_index>
 

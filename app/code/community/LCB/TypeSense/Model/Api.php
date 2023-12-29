@@ -9,6 +9,11 @@ use Typesense\Client;
 class LCB_TypeSense_Model_Api
 {
     /**
+     * @var array
+     */
+    private $results = [];
+
+    /**
      * Get TypeSense admin client instance
      *
      * @return Client
@@ -80,7 +85,7 @@ class LCB_TypeSense_Model_Api
             [
                 'name' => 'category_ids',
                 'type' => 'string[]',
-                'optional' => true
+                'optional' => true,
             ],
         ];
         foreach ($attributes as $attribute) {
@@ -101,30 +106,18 @@ class LCB_TypeSense_Model_Api
 
     /**
      * @param  string $query
+     * @param  array  $filters
      * @return array
      */
-    public function searchIds($query): array
+    public function searchIds($query, $filters = []): array
     {
         try {
-            $client = $this->getSearchClient();
-
             $result = [
                 'count' => 0,
                 'ids' => [],
             ];
 
-            $queryBy = ['name'];
-            $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
-            foreach ($attributes as $attribute) {
-                if (!in_array($attribute->getAttributeCode(), ['status', 'visibility'])) {
-                    $queryBy[] = $attribute->getAttributeCode();
-                }
-            }
-            $payload = [
-                'q' => $query,
-                'query_by' => implode(',', $queryBy),
-            ];
-            $results = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->search($payload);
+            $results = $this->search($query, $filters);
 
             if (!empty($results['found'])) {
                 $result['count'] = $results['found'];
@@ -140,5 +133,99 @@ class LCB_TypeSense_Model_Api
         }
 
         return $result;
+    }
+
+    /**
+     * @param  string $query
+     * @return array
+     */
+    public function getFacets($query): array
+    {
+        try {
+            $facets = [];
+
+            $results = $this->search($query);
+
+            if (!empty($results['found'])) {
+                $filterableAttributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addIsFilterableFilter();
+                foreach ($results['hits'] as $hit) {
+                    $document = $hit['document'];
+                    foreach ($filterableAttributes as $attribute) {
+                        $code = $attribute->getAttributeCode();
+                        if (!empty($document[$code])) {
+                            $value = $document[$code];
+                            if ($value) {
+                                if (!isset($facets[$code][$value])) {
+                                    $facets[$code]['label'] = $attribute->getFrontendLabel();
+                                    $facets[$code][$value] = [
+                                        'label' => $value,
+                                        'value' => $value,
+                                        'count' => 1,
+                                    ];
+                                } else {
+                                    $facets[$code][$value]['count']++;
+                                }
+                            }
+                        }
+                    }
+                    if (!empty($document['category_ids'])) {
+                        foreach ($document['category_ids'] as $categoryId) {
+                            if (!isset($facets['category_ids'][$categoryId])) {
+                                if ($category = Mage::getModel('catalog/category')->load($categoryId)) {
+                                    $facets['category_ids'][$categoryId] = [
+                                        'label' => $category->getName(),
+                                        'value' => $category->getId(),
+                                        'count' => 1,
+                                    ];
+                                } else {
+                                    $facets['category_ids'][$categoryId]['count']++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Mage::helper('lcb_typesense')->log($e->getMessage());
+        } catch (Exception $e) {
+            Mage::helper('lcb_typesense')->log($e->getMessage());
+        }
+
+        return $facets;
+    }
+
+    /**
+     * @param  string $query
+     * @param  array  $filters
+     * @return array
+     */
+    public function search($query, $filters = []): array
+    {
+        $hash = md5(json_encode($filters));
+        if (!$this->results[$hash]) {
+            $queryBy = ['name'];
+            $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
+            foreach ($attributes as $attribute) {
+                if (!in_array($attribute->getAttributeCode(), ['status', 'visibility'])) {
+                    $queryBy[] = $attribute->getAttributeCode();
+                }
+            }
+            $payload = [
+                'q' => $query,
+                'query_by' => implode(',', $queryBy),
+            ];
+
+            if ($filters) {
+                foreach ($filters as $code => $value) {
+                    $filterString = "$code:$value";
+                }
+                $payload['filter_by'] = $filterString;
+            }
+
+            $client = $this->getSearchClient();
+            $this->results[$hash] = $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->search($payload);
+        }
+
+        return $this->results[$hash];
     }
 }
