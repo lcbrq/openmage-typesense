@@ -25,14 +25,16 @@ class LCB_TypeSense_Block_Product_Search_Facets extends Mage_Core_Block_Template
             ]);
             $items = new Varien_Data_Collection();
             foreach ($values as $data) {
-                $item = new Varien_Object($data);
-                $item->setUrl($this->getUrl('*/*/*') . '?' . "fq[$code]=" . $data['value'] . '&q=' . $query);
-                if (isset($filters[$code])) {
-                    if ($data['value'] === $filters[$code]) {
-                        $item->setSelected(true);
+                if (is_array($data)) {
+                    $item = new Varien_Object($data);
+                    $item->setUrl($this->getUrl('*/*/*') . '?' . "fq[$code]=" . $data['value'] . '&q=' . $query);
+                    if (isset($filters[$code])) {
+                        if ($data['value'] === $filters[$code]) {
+                            $item->setSelected(true);
+                        }
                     }
+                    $items->addItem($item);
                 }
-                $items->addItem($item);
             }
             $facet->setItems($items);
             $collection->addItem($facet);

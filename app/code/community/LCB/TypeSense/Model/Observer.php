@@ -32,7 +32,7 @@ class LCB_TypeSense_Model_Observer
     }
 
     /**
-     * Send product in TypeSense
+     * Send product to TypeSense
      *
      * @param Varien_Event_Observer
      * @return void
@@ -41,18 +41,8 @@ class LCB_TypeSense_Model_Observer
     {
         $product = $observer->getProduct();
 
-        $client = Mage::getModel('lcb_typesense/api')->getAdminClient();
-
         try {
-            $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert(
-                [
-                    'id' => (string) $product->getId(),
-                    'name' => (string) $product->getName(),
-                    'sku' => (string) $product->getSku(),
-                    'short_description' => (string) $product->getShortDescription(),
-                    'description' => (string) $product->getDescription(),
-                ]
-            );
+            Mage::getModel('lcb_typesense/index')->reindex($product);
         } catch (Exception $e) {
             Mage::helper('lcb_typesense')->log($e->getMessage());
         } catch (Error $e) {
