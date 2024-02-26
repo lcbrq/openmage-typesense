@@ -15,7 +15,7 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
         if ($this->getArg('reindex')) {
             Mage::app()->setCurrentStore(Mage_Core_Model_App::DISTRO_STORE_ID);
             $client = Mage::getModel('lcb_typesense/api')->getAdminClient();
-            $collection = Mage::getModel('catalog/product')->getCollection();
+            $collection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('sku');
             $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
 
             $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
@@ -23,6 +23,7 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
                 $collection->addAttributeToSelect($attribute->getAttributeCode());
             }
             Mage::dispatchEvent('lcb_typesense_catalog_product_collection_reindex_before', array('collection' => $collection));
+            $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
             foreach ($collection as $product) {
                 try {
                     Mage::getSingleton('lcb_typesense/index')->reindex($product, $attributes);
