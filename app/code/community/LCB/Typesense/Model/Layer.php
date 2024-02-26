@@ -13,8 +13,7 @@ class LCB_Typesense_Model_Layer extends Mage_CatalogSearch_Model_Layer
     public function getProductCollection()
     {
         $query = Mage::helper('catalogsearch')->getQuery()->getQueryText();
-
-        $filters = [];
+        $filters = $this->getState()->getFilters();
         $result = Mage::getSingleton('lcb_typesense/api')->searchIds($query, $filters);
         if (!$result['count']) {
             return new Varien_Data_Collection();

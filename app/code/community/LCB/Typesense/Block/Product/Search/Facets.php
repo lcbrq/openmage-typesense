@@ -42,4 +42,17 @@ class LCB_Typesense_Block_Product_Search_Facets extends Mage_Core_Block_Template
 
         return $collection;
     }
+
+    /**
+     * Prepare child blocks
+     *
+     * @inheritDoc
+     */
+    protected function _prepareLayout()
+    {
+        if ($filters = $this->getRequest()->getParam('fq')) {
+            Mage::getSingleton('lcb_typesense/layer')->getState()->setFilters($filters);
+        }
+        return parent::_prepareLayout();
+    }
 }
