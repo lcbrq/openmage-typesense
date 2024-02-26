@@ -8,6 +8,7 @@ class LCB_TypeSense_Block_Product_Search_List extends Mage_Catalog_Block_Product
     /**
      * Prepare and return saerch product collection with pagination support
      *
+     * @deprecated in favor of LCB_TypeSense_Model_Layer
      * @return Mage_Catalog_Model_Resource_Product_Collection|Varien_Data_Collection
      */
     protected function _getProductCollection()

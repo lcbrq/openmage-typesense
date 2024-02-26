@@ -9,6 +9,11 @@ use Typesense\Client;
 class LCB_TypeSense_Model_Api
 {
     /**
+     * @var int
+     */
+    public const DEFAULT_LIMIT = 250;
+
+    /**
      * @var array
      */
     private $results = [];
@@ -210,9 +215,11 @@ class LCB_TypeSense_Model_Api
                     $queryBy[] = $attribute->getAttributeCode();
                 }
             }
+
             $payload = [
                 'q' => $query,
                 'query_by' => implode(',', $queryBy),
+                'per_page' => self::DEFAULT_LIMIT,
             ];
 
             if ($filters) {
