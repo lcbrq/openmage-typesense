@@ -3,7 +3,7 @@
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2023, LeftCurlyBracket
  */
-class LCB_TypeSense_Model_Observer
+class LCB_Typesense_Model_Observer
 {
     /**
      * @var string
@@ -32,7 +32,7 @@ class LCB_TypeSense_Model_Observer
     }
 
     /**
-     * Send product to TypeSense
+     * Send product to Typesense
      *
      * @param Varien_Event_Observer
      * @return void

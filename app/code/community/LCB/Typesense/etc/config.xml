@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <LCB_TypeSense>
+        <LCB_Typesense>
             <version>1.0.0</version>
-        </LCB_TypeSense>
+        </LCB_Typesense>
     </modules>
     <global>
         <blocks>
             <lcb_typesense>
-                <class>LCB_TypeSense_Block</class>
+                <class>LCB_Typesense_Block</class>
             </lcb_typesense>
         </blocks>
         <models>
             <lcb_typesense>
-                <class>LCB_TypeSense_Model</class>
+                <class>LCB_Typesense_Model</class>
                 <resourceModel>lcb_typesense_resource</resourceModel>
             </lcb_typesense>
             <lcb_typesense_resource>
-                <class>LCB_TypeSense_Model_Resource</class>
+                <class>LCB_Typesense_Model_Resource</class>
             </lcb_typesense_resource>
         </models>
         <helpers>
             <lcb_typesense>
-                <class>LCB_TypeSense_Helper</class>
+                <class>LCB_Typesense_Helper</class>
             </lcb_typesense>
         </helpers>
         <events>
@@ -53,7 +53,7 @@
             <lcb_typesense>
                 <use>standard</use>
                 <args>
-                    <module>LCB_TypeSense</module>
+                    <module>LCB_Typesense</module>
                     <frontName>typesense</frontName>
                 </args>
             </lcb_typesense>

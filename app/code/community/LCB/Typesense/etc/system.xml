@@ -8,7 +8,7 @@
     </tabs>
     <sections>
         <lcb_typesense translate="label" module="lcb_typesense">
-            <label>TypeSense</label>
+            <label>Typesense</label>
             <tab>lcbrq</tab>
             <frontend_type>text</frontend_type>
             <sort_order>999</sort_order>

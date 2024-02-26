@@ -5,11 +5,11 @@
  * @copyright (c) 2024, LeftCurlyBracket
  */
 
-use LCB_TypeSense_Model_Resource_Catalog_Product_Attribute_Collection as AttributesCollection;
+use LCB_Typesense_Model_Resource_Catalog_Product_Attribute_Collection as AttributesCollection;
 use Mage_Catalog_Model_Product as Product;
 use Typesense\Client;
 
-class LCB_TypeSense_Model_Index
+class LCB_Typesense_Model_Index
 {
     protected ?Client $client;
 

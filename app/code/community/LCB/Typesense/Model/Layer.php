@@ -3,12 +3,12 @@
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2024, LeftCurlyBracket
  */
-class LCB_TypeSense_Model_Layer extends Mage_CatalogSearch_Model_Layer
+class LCB_Typesense_Model_Layer extends Mage_CatalogSearch_Model_Layer
 {
     /**
      * Returns product collection for current query
      *
-     * @return LCB_TypeSense_Model_Layer
+     * @return LCB_Typesense_Model_Layer
      */
     public function getProductCollection()
     {

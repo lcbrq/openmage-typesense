@@ -1,6 +1,6 @@
-# LCB_TypeSense
+# LCB_Typesense
 
-Basic approach to lightning-fast, open source TypeSense search for OpenMage
+Basic approach to lightning-fast, open source Typesense search for OpenMage
 
 # Version
 

@@ -3,7 +3,7 @@
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2023, LeftCurlyBracket
  */
-class LCB_TypeSense_SearchController extends Mage_Core_Controller_Front_Action
+class LCB_Typesense_SearchController extends Mage_Core_Controller_Front_Action
 {
     /**
      * @inheritDoc

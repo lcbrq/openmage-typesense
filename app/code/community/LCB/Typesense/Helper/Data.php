@@ -3,7 +3,7 @@
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2023, LeftCurlyBracket
  */
-class LCB_TypeSense_Helper_Data extends Mage_Core_Helper_Abstract
+class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
      * @var string

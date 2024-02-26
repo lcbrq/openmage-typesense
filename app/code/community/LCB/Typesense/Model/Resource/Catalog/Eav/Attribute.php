@@ -1,11 +1,11 @@
 <?php
 
-class LCB_TypeSense_Model_Resource_Catalog_Eav_Attribute extends Mage_Catalog_Model_Resource_Eav_Attribute
+class LCB_Typesense_Model_Resource_Catalog_Eav_Attribute extends Mage_Catalog_Model_Resource_Eav_Attribute
 {
     /**
      * @return string
      */
-    public function getTypeSenseType()
+    public function getTypesenseType()
     {
         $type = '';
         switch ($this->getBackendType()) {

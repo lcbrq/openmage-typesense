@@ -6,7 +6,7 @@
 use Symfony\Component\HttpClient\HttplugClient;
 use Typesense\Client;
 
-class LCB_TypeSense_Model_Api
+class LCB_Typesense_Model_Api
 {
     /**
      * @var int
@@ -19,7 +19,7 @@ class LCB_TypeSense_Model_Api
     private $results = [];
 
     /**
-     * Get TypeSense admin client instance
+     * Get Typesense admin client instance
      *
      * @return Client
      */
@@ -44,7 +44,7 @@ class LCB_TypeSense_Model_Api
     }
 
     /**
-     * Get TypeSense search client instance
+     * Get Typesense search client instance
      *
      * @return Client
      */
@@ -97,7 +97,7 @@ class LCB_TypeSense_Model_Api
             if (!in_array($attribute->getAttributeCode(), ['sku', 'status', 'visibility'])) {
                 $fields[] = [
                     'name' => $attribute->getAttributeCode(),
-                    'type' => $attribute->getTypeSenseType(),
+                    'type' => $attribute->getTypesenseType(),
                 ];
             }
         }

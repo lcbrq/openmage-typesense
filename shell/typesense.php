@@ -5,7 +5,7 @@
  */
 require_once 'abstract.php';
 
-class LCB_TypeSense_Shell extends Mage_Shell_Abstract
+class LCB_Typesense_Shell extends Mage_Shell_Abstract
 {
     /**
      * @interitDoc
@@ -46,5 +46,5 @@ class LCB_TypeSense_Shell extends Mage_Shell_Abstract
     }
 }
 
-$typesense = new LCB_TypeSense_Shell();
+$typesense = new LCB_Typesense_Shell();
 $typesense->run();

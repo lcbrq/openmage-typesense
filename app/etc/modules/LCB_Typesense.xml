@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <LCB_TypeSense>
+        <LCB_Typesense>
             <active>true</active>
             <codePool>community</codePool>
-        </LCB_TypeSense>
+        </LCB_Typesense>
     </modules>
 </config>
 
