@@ -1,6 +1,19 @@
 <?xml version="1.0"?>
 <layout>
 
+    <lcb_typesense_search_autocomplete>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/typesense/autocomplete.min.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/typesense/typesense.min.js</name>
+            </action>
+        </reference>
+    </lcb_typesense_search_autocomplete>
+
     <lcb_typesense_search_index>
         <update handle="catalogsearch_result_index" />
     </lcb_typesense_search_index>
