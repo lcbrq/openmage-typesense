@@ -80,6 +80,10 @@ class LCB_Typesense_Model_Api
                 'type' => 'string',
             ],
             [
+                'name' => 'url_key',
+                'type' => 'string',
+            ],
+            [
                 'name' => 'status',
                 'type' => 'int32',
             ],

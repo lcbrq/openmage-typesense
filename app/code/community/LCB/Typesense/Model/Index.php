@@ -30,6 +30,7 @@ class LCB_Typesense_Model_Index
         $payload = [
             'id' => (string) $product->getId(),
             'sku' => (string) $product->getSku(),
+            'url_key' => (string) $product->getUrlKey(),
             'category_ids' => $product->getCategoryIds(),
         ];
         foreach ($attributes as $attribute) {
