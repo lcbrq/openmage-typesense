@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
- * @copyright (c) 2023, LeftCurlyBracket
+ * @copyright (c) 2024, LeftCurlyBracket
  */
 class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
 {
@@ -10,6 +10,14 @@ class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
      */
     public function getResultUrl()
     {
-        $this->getUrl('typesense');
+        return $this->getUrl('typesense/search');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutocompleteEnabled()
+    {
+        return Mage::helper('lcb_typesense')->getAutocompleteEnabled();
     }
 }

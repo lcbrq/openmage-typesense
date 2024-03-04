@@ -1,0 +1,92 @@
+<?php
+/* @var LCB_Typesense_Block_Searchbox $this */
+/* @var Mage_Catalogsearch_Helper_Data $catalogSearchHelper */
+$catalogSearchHelper = $this->helper('catalogsearch');
+?>
+<form id="search_mini_form" action="<?php echo $this->getResultUrl() ?>" method="get">
+    <div class="form-search">
+        <div class="inner-addon left-addon">
+            <i class="fa fa-search"></i>
+            <label for="search"><?php echo $this->__('Search:') ?></label>
+            <input id="search" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength(); ?>" />
+        </div>
+        <div id="search_autocomplete" class="search-autocomplete"></div>
+        <script type="text/javascript">
+            //<![CDATA[
+            var searchForm = new Varien.searchForm('search_mini_form', 'search', '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Search entire store here...')) ?>');
+            searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'search_autocomplete');
+            //]]>
+        </script>
+    </div>
+</form>
+
+<?php if ($this->isAutocompleteEnabled()): ?>
+    <script>
+        let typesenseClient = new Typesense.Client({
+            'nearestNode': {'host': '<?= Mage::helper('lcb_typesense')->getHost() ?>', 'port': '443', 'protocol': 'https'},
+            'nodes': [
+                {'host': '<?= Mage::helper('lcb_typesense')->getHost() ?>', 'port': '443', 'protocol': 'https'},
+            ],
+            'apiKey': '<?= Mage::helper('lcb_typesense')->getSearchOnlyApiKey() ?>',
+            'connectionTimeoutSeconds': 2
+        })
+
+
+        const {autocomplete} = window['@algolia/autocomplete-js'];
+        autocomplete({
+            container: '#search_mini_form',
+            placeholder: '<?= $this->__('Co chcesz naprawić?') ?>',
+            async getSources( {query}) {
+                const results = await typesenseClient.collections('gtxservice').documents().search({
+                    q: query,
+                    query_by: 'brand,name,short_description,gtx_catalogno,gtx_ean13',
+                    highlight_full_fields: 'name,brand,gtx_catalogno',
+                    per_page: 15
+                })
+
+
+                return [
+                    {
+                        sourceId: 'predictions',
+                        getItems() {
+                            return results.hits;
+                        },
+                        getItemInputValue( {item}) {
+                            return item.document.name;
+                        },
+                        onSelect( { state, event }) {
+                            var urlKey = state.collections[0].items[0].document.url_key;
+                            window.location = BASE_URL + urlKey + '.html';
+                        },
+                        templates: {
+                            item( { item, html }) {
+                                // Attempt to find highlights for 'brand' and 'name', defaulting to plain text if not present
+                                const nameHighlight = item.highlights.find(h => h.field === 'name');
+                                const brandHighlight = item.highlights.find(h => h.field === 'brand');
+                                const gtx_catalognoHighlight = item.highlights.find(h => h.field === 'gtx_catalogno');
+
+                                const nameHtml = nameHighlight ? html`${nameHighlight.value}` : item.document.name;
+                                const brandHtml = brandHighlight ? html`${brandHighlight.value}` : item.document.brand;
+                                const gtx_catalognoHtml = gtx_catalognoHighlight ? html`${gtx_catalognoHighlight.value}` : item.document.gtx_catalogno;
+
+                                return html`
+                                <a href="#">
+                                    <span class="autocomplete-name" dangerouslySetInnerHTML=${{__html: nameHtml}}></span>
+                                    <span> - </span>
+                                    <b class="autocomplete-brand" dangerouslySetInnerHTML=${{__html: brandHtml}}></b>
+                                    <span> </span>
+                                    <span class="autocomplete-gtx_catalogno" dangerouslySetInnerHTML=${{__html: gtx_catalognoHtml}}></span>
+                                </a>
+                            `;
+                            },
+
+                            noResults() {
+                                return '<?= $this->__('No results found') ?>';
+                            },
+                        },
+                    },
+                ];
+            },
+        });
+    </script>
+<?php endif; ?>

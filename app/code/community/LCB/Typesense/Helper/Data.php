@@ -1,10 +1,15 @@
 <?php
 /**
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
- * @copyright (c) 2023, LeftCurlyBracket
+ * @copyright (c) 2024, LeftCurlyBracket
  */
 class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    /**
+     * @var string
+     */
+    private const XPATH_TYPESENSE_AUTOCOMPLETE_ENABLED = 'lcb_typesense/autocomplete/enabled';
+
     /**
      * @var string
      */
@@ -29,6 +34,14 @@ class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
      * @var string
      */
     private const TYPESENSE_LOG_FILE = 'typesense.log';
+
+    /**
+     * @return bool
+     */
+    public function getAutocompleteEnabled(): bool
+    {
+        return Mage::getStoreConfigFlag(self::XPATH_TYPESENSE_AUTOCOMPLETE_ENABLED, Mage::app()->getStore()->getId());
+    }
 
     /**
      * @return string

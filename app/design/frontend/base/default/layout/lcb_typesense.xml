@@ -1,13 +1,21 @@
 <?xml version="1.0"?>
 <layout>
 
+    <default>
+        <reference name="header">
+            <remove name="top.search"/>
+            <block type="lcb_typesense/searchbox" name="typesense.search" as="topSearch" template="lcb_typesense/form.mini.phtml"/>
+            <update handle="lcb_typesense_search_autocomplete"/>
+        </reference>
+    </default>
+
     <lcb_typesense_search_autocomplete>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="lcb_typesense/autocomplete/enabled">
                 <type>skin_js</type>
                 <name>js/typesense/autocomplete.min.js</name>
             </action>
-            <action method="addItem">
+            <action method="addItem" ifconfig="lcb_typesense/autocomplete/enabled">
                 <type>skin_js</type>
                 <name>js/typesense/typesense.min.js</name>
             </action>
