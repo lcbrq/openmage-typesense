@@ -5,11 +5,6 @@ $catalogSearchHelper = $this->helper('catalogsearch');
 ?>
 
 <?php if ($this->isAutocompleteEnabled()): ?>
-    <style>
-        :root {
-            --aa-detached-media-query: (max-width: 680px);
-        }
-    </style>
 
     <div id="search_mini_form"></div>
 
@@ -27,6 +22,7 @@ $catalogSearchHelper = $this->helper('catalogsearch');
         const {autocomplete} = window['@algolia/autocomplete-js'];
         autocomplete({
             container: '#search_mini_form',
+            detachedMediaQuery: 'none',
             placeholder: '<?php echo $this->__('Search') ?>',
             async getSources( {query}) {
                 const results = await typesenseClient.collections('gtxservice').documents().search({
