@@ -3,24 +3,16 @@
 /* @var Mage_Catalogsearch_Helper_Data $catalogSearchHelper */
 $catalogSearchHelper = $this->helper('catalogsearch');
 ?>
-<form id="search_mini_form" action="<?php echo $this->getResultUrl() ?>" method="get">
-    <div class="form-search">
-        <div class="inner-addon left-addon">
-            <i class="fa fa-search"></i>
-            <label for="search"><?php echo $this->__('Search:') ?></label>
-            <input id="search" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength(); ?>" />
-        </div>
-        <div id="search_autocomplete" class="search-autocomplete"></div>
-        <script type="text/javascript">
-            //<![CDATA[
-            var searchForm = new Varien.searchForm('search_mini_form', 'search', '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Search entire store here...')) ?>');
-            searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'search_autocomplete');
-            //]]>
-        </script>
-    </div>
-</form>
 
 <?php if ($this->isAutocompleteEnabled()): ?>
+    <style>
+        :root {
+            --aa-detached-media-query: (max-width: 680px);
+        }
+    </style>
+
+    <div id="search_mini_form"></div>
+
     <script>
         let typesenseClient = new Typesense.Client({
             'nearestNode': {'host': '<?= Mage::helper('lcb_typesense')->getHost() ?>', 'port': '443', 'protocol': 'https'},
@@ -35,13 +27,12 @@ $catalogSearchHelper = $this->helper('catalogsearch');
         const {autocomplete} = window['@algolia/autocomplete-js'];
         autocomplete({
             container: '#search_mini_form',
-            placeholder: '<?= $this->__('Co chcesz naprawić?') ?>',
+            placeholder: '<?php echo $this->__('Search') ?>',
             async getSources( {query}) {
                 const results = await typesenseClient.collections('gtxservice').documents().search({
                     q: query,
                     query_by: 'brand,name,short_description,gtx_catalogno,gtx_ean13',
-                    highlight_full_fields: 'name,brand,gtx_catalogno',
-                    per_page: 15
+                    highlight_full_fields: 'name,brand,gtx_catalogno'
                 })
 
 
@@ -89,4 +80,23 @@ $catalogSearchHelper = $this->helper('catalogsearch');
             },
         });
     </script>
+
+<?php else: ?>
+
+    <form id="search_mini_form" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+        <div class="input-box">
+            <label for="search"><?php echo $this->__('Search:') ?></label>
+            <input id="search" type="search" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text required-entry" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" placeholder="<?php echo $this->quoteEscape($this->__('Search entire store here...')) ?>" />
+            <button type="submit" title="<?php echo $this->quoteEscape($this->__('Search')) ?>" class="button search-button"><span><span><?php echo $this->__('Search') ?></span></span></button>
+        </div>
+
+        <div id="search_autocomplete" class="search-autocomplete"></div>
+        <script type="text/javascript">
+        //<![CDATA[
+            var searchForm = new Varien.searchForm('search_mini_form', 'search', '');
+            searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'search_autocomplete');
+        //]]>
+        </script>
+    </form>
+
 <?php endif; ?>

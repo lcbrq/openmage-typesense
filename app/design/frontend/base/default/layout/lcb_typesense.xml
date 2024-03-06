@@ -11,6 +11,10 @@
 
     <lcb_typesense_search_autocomplete>
         <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/typesense/styles.css</name>
+            </action>
             <action method="addItem" ifconfig="lcb_typesense/autocomplete/enabled">
                 <type>skin_js</type>
                 <name>js/typesense/autocomplete.min.js</name>

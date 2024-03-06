@@ -3,4 +3,5 @@ app/design/frontend/base/default/layout/lcb_typesense.xml
 app/design/frontend/base/default/template/lcb_typesense
 app/etc/modules/LCB_Typesense.xml
 shell/typesense.php
+skin/frontend/base/default/css/typesense
 skin/frontend/base/default/js/typesense
