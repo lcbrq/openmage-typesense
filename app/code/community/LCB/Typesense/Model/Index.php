@@ -27,11 +27,12 @@ class LCB_Typesense_Model_Index
 
         Mage::dispatchEvent('lcb_typesense_catalog_product_reindex_before', array('product' => $product, 'attributes' => $attributes));
 
+        $requestPath = $product->getRequestPath();
         $payload = new Varien_Object([
             'id' => (string) $product->getId(),
             'sku' => (string) $product->getSku(),
             'url_key' => (string) $product->getUrlKey(),
-            'request_path' => (string) $product->getRequestPath(),
+            'request_path' => $requestPath ? (string) $product->getRequestPath() : 'catalog/product/view/id/' . $product->getId(),
             'category_ids' => $product->getCategoryIds(),
             'thumbnail' => $product->getThumbnail(),
         ]);
@@ -43,7 +44,7 @@ class LCB_Typesense_Model_Index
             } elseif (in_array($code, ['status', 'visibility'])) {
                 $payload->setData($code, (int) $product->getData($code));
             } elseif ($attribute->getFrontendInput() === 'select') {
-                $payload->setData($code, (string) $product->getData($code));
+                $payload->setData($code, (string) $product->getAttributeText($code));
             } else {
                 $payload->setData($code, (string) $product->getData($code));
             }

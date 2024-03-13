@@ -22,7 +22,7 @@
         <update handle="lcb_typesense_search_autocomplete"/>
         <reference name="header">
             <remove name="top.search"/>
-            <block type="lcb_typesense/searchbox" name="typesense.search" as="topSearch" template="lcb_typesense/form.mini.phtml"/>
+            <block type="lcb_typesense/searchbox" name="typesense.search" as="topSearch" template="lcb/typesense/form.mini.phtml"/>
         </reference>
     </default>
 
