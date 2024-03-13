@@ -96,6 +96,11 @@ class LCB_Typesense_Model_Api
                 'type' => 'string[]',
                 'optional' => true,
             ],
+            [
+                'name' => 'thumbnail',
+                'type' => 'string',
+                'thumbnail' => true,
+            ],
         ];
         foreach ($attributes as $attribute) {
             if (!in_array($attribute->getAttributeCode(), ['sku', 'status', 'visibility'])) {

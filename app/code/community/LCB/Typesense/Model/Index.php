@@ -27,26 +27,30 @@ class LCB_Typesense_Model_Index
 
         Mage::dispatchEvent('lcb_typesense_catalog_product_reindex_before', array('product' => $product, 'attributes' => $attributes));
 
-        $payload = [
+        $payload = new Varien_Object([
             'id' => (string) $product->getId(),
             'sku' => (string) $product->getSku(),
             'url_key' => (string) $product->getUrlKey(),
             'category_ids' => $product->getCategoryIds(),
-        ];
+            'thumbnail' => $product->getThumbnail(),
+        ]);
+
         foreach ($attributes as $attribute) {
             $code = $attribute->getAttributeCode();
             if ($attribute->getBackendType() === 'decimal') {
-                $payload[$code] = (float) $product->getData($code);
+                $payload->setData($code, (float) $product->getData($code));
             } elseif (in_array($code, ['status', 'visibility'])) {
-                $payload[$code] = (int) $product->getData($code);
+                $payload->setData($code, (int) $product->getData($code));
             } elseif ($attribute->getFrontendInput() === 'select') {
-                $payload[$code] = (string) $product->getAttributeText($code);
+                $payload->setData($code, (string) $product->getData($code));
             } else {
-                $payload[$code] = (string) $product->getData($code);
+                $payload->setData($code, (string) $product->getData($code));
             }
         }
 
-        $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert($payload);
+        Mage::dispatchEvent('lcb_typesense_catalog_product_upsert_before', array('product' => $product, 'payload' => $payload));
+
+        $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert($payload->getData());
     }
 
     protected function getClient(): Client

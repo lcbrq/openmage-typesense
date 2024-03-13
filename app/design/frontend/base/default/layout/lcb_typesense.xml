@@ -1,14 +1,6 @@
 <?xml version="1.0"?>
 <layout>
 
-    <default>
-        <reference name="header">
-            <remove name="top.search"/>
-            <block type="lcb_typesense/searchbox" name="typesense.search" as="topSearch" template="lcb_typesense/form.mini.phtml"/>
-            <update handle="lcb_typesense_search_autocomplete"/>
-        </reference>
-    </default>
-
     <lcb_typesense_search_autocomplete>
         <reference name="head">
             <action method="addItem">
@@ -25,6 +17,14 @@
             </action>
         </reference>
     </lcb_typesense_search_autocomplete>
+
+    <default>
+        <update handle="lcb_typesense_search_autocomplete"/>
+        <reference name="header">
+            <remove name="top.search"/>
+            <block type="lcb_typesense/searchbox" name="typesense.search" as="topSearch" template="lcb_typesense/form.mini.phtml"/>
+        </reference>
+    </default>
 
     <lcb_typesense_search_index>
         <update handle="catalogsearch_result_index" />

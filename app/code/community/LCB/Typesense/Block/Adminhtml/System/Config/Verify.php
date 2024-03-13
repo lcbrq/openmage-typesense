@@ -5,7 +5,6 @@
  */
 class LCB_Typesense_Block_Adminhtml_System_Config_Verify extends Mage_Adminhtml_Block_Abstract implements Varien_Data_Form_Element_Renderer_Interface
 {
-
     /**
      * @param Varien_Data_Form_Element_Abstract $element
      * @return string

@@ -15,7 +15,10 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
         if ($this->getArg('reindex')) {
             Mage::app()->setCurrentStore(Mage_Core_Model_App::DISTRO_STORE_ID);
             $client = Mage::getModel('lcb_typesense/api')->getAdminClient();
-            $collection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('sku')->addAttributeToSelect('url_key');
+            $collection = Mage::getModel('catalog/product')->getCollection()
+                    ->addAttributeToSelect('sku')
+                    ->addAttributeToSelect('thumbnail')
+                    ->addAttributeToSelect('url_key');
             $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
 
             $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();

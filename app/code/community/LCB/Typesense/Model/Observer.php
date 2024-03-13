@@ -32,6 +32,29 @@ class LCB_Typesense_Model_Observer
     }
 
     /**
+     * Update Typesense schema
+     *
+     * @param Varien_Event_Observer
+     * @return void
+     */
+    public function saveAttributeAfter($observer): void
+    {
+        $attribute = $observer->getDataObject();
+
+        try {
+            $attributeHasChanged = $attribute->getIsSearchable() !== $attribute->getOrigData('is_searchable')
+                || $attribute->getIsFilterableInSearch() !== $attribute->getOrigData('is_filterable_in_search');
+            if ($attributeHasChanged) {
+                Mage::getModel('lcb_typesense/attribute_api')->update($attribute);
+            }
+        } catch (Exception $e) {
+            Mage::logException($e);
+        } catch (Error $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
      * Send product to Typesense
      *
      * @param Varien_Event_Observer

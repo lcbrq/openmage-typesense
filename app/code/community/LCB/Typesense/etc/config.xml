@@ -46,6 +46,14 @@
                     </lcb_typesense_admin_system_config_section_save_after>
                 </observers>
             </admin_system_config_section_save_after>
+            <catalog_entity_attribute_save_after>
+                <observers>
+                    <lcb_typesense_catalog_entity_attribute_save_after>
+                        <class>lcb_typesense/observer</class>
+                        <method>saveAttributeAfter</method>
+                    </lcb_typesense_catalog_entity_attribute_save_after>
+                </observers>
+            </catalog_entity_attribute_save_after>
         </events>
     </adminhtml>
     <frontend>
