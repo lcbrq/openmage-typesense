@@ -84,6 +84,10 @@ class LCB_Typesense_Model_Api
                 'type' => 'string',
             ],
             [
+                'name' => 'request_path',
+                'type' => 'string',
+            ],
+            [
                 'name' => 'status',
                 'type' => 'int32',
             ],

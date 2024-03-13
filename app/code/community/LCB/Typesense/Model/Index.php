@@ -31,6 +31,7 @@ class LCB_Typesense_Model_Index
             'id' => (string) $product->getId(),
             'sku' => (string) $product->getSku(),
             'url_key' => (string) $product->getUrlKey(),
+            'request_path' => (string) $product->getRequestPath(),
             'category_ids' => $product->getCategoryIds(),
             'thumbnail' => $product->getThumbnail(),
         ]);

@@ -25,7 +25,7 @@ $catalogSearchHelper = $this->helper('catalogsearch');
             detachedMediaQuery: 'none',
             placeholder: '<?php echo $this->__('Search') ?>',
             async getSources( {query}) {
-                const results = await typesenseClient.collections('gtxservice').documents().search({
+                const results = await typesenseClient.collections('<?= Mage::helper('lcb_typesense')->getCollectionName() ?>').documents().search({
                     q: query,
                     query_by: 'brand,name,short_description,gtx_catalogno,gtx_ean13',
                     highlight_full_fields: 'name,brand,gtx_catalogno'
@@ -41,34 +41,31 @@ $catalogSearchHelper = $this->helper('catalogsearch');
                         getItemInputValue( {item}) {
                             return item.document.name;
                         },
-                        onSelect( { state, event }) {
-                            var urlKey = state.collections[0].items[0].document.url_key;
-                            window.location = BASE_URL + urlKey + '.html';
-                        },
                         templates: {
                             item( { item, html }) {
                                 // Attempt to find highlights for 'brand' and 'name', defaulting to plain text if not present
                                 const nameHighlight = item.highlights.find(h => h.field === 'name');
                                 const brandHighlight = item.highlights.find(h => h.field === 'brand');
-                                const gtx_catalognoHighlight = item.highlights.find(h => h.field === 'gtx_catalogno');
+                                const skuHighlight = item.highlights.find(h => h.field === 'sku');
 
+                                const itemUrl = BASE_URL + item.document.request_path;
                                 const nameHtml = nameHighlight ? html`${nameHighlight.value}` : item.document.name;
                                 const brandHtml = brandHighlight ? html`${brandHighlight.value}` : item.document.brand;
-                                const gtx_catalognoHtml = gtx_catalognoHighlight ? html`${gtx_catalognoHighlight.value}` : item.document.gtx_catalogno;
+                                const skuHtml = skuHighlight ? html`${skuHighlight.value}` : item.document.sku;
 
                                 return html`
-                                <a href="#">
+                                <a href="${itemUrl}">
                                     <span class="autocomplete-name" dangerouslySetInnerHTML=${{__html: nameHtml}}></span>
                                     <span> - </span>
                                     <b class="autocomplete-brand" dangerouslySetInnerHTML=${{__html: brandHtml}}></b>
                                     <span> </span>
-                                    <span class="autocomplete-gtx_catalogno" dangerouslySetInnerHTML=${{__html: gtx_catalognoHtml}}></span>
+                                    <span class="autocomplete-gtx_catalogno" dangerouslySetInnerHTML=${{__html: skuHtml}}></span>
                                 </a>
                             `;
                             },
 
                             noResults() {
-                                return '<?= $this->__('No results found') ?>';
+                                return '<?= $this->__('Your search returns no results.') ?>';
                             },
                         },
                     },
