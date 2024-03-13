@@ -13,6 +13,7 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
     public function run()
     {
         if ($this->getArg('reindex')) {
+            session_start();
             Mage::app()->setCurrentStore(Mage_Core_Model_App::DISTRO_STORE_ID);
             $client = Mage::getModel('lcb_typesense/api')->getAdminClient();
             $collection = Mage::getModel('catalog/product')->getCollection()

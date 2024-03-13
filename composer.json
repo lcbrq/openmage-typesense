@@ -4,7 +4,9 @@
     "type": "openmage-module",
     "description": "Basic approach to lightning-fast, open source Typesense search for OpenMage.",
     "require": {
-        "typesense/typesense-php": "*"
+        "typesense/typesense-php": "*",
+        "symfony/http-client": "*",
+        "php-http/message-factory": "*"
     },
     "extra": {
         "magento-root-dir": "test/"

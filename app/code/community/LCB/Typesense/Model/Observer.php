@@ -24,8 +24,10 @@ class LCB_Typesense_Model_Observer
             try {
                 $client = Mage::getModel('lcb_typesense/api')->createCollection();
             } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::helper('lcb_typesense')->log($e->getMessage());
             } catch (Error $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::helper('lcb_typesense')->log($e->getMessage());
             }
         }

@@ -24,11 +24,16 @@ $catalogSearchHelper = $this->helper('catalogsearch');
             container: '#search_mini_form',
             detachedMediaQuery: 'none',
             placeholder: '<?php echo $this->__('Search') ?>',
+            onSubmit({ state }) {
+                const searchPageUrl = '<?= $this->getUrl('typesense/search'); ?>' + '?q=' + encodeURIComponent(state.query);
+                window.location.href = searchPageUrl;
+
+            },
             async getSources( {query}) {
                 const results = await typesenseClient.collections('<?= Mage::helper('lcb_typesense')->getCollectionName() ?>').documents().search({
                     q: query,
-                    query_by: 'brand,name,short_description,gtx_catalogno,gtx_ean13',
-                    highlight_full_fields: 'name,brand,gtx_catalogno'
+                    query_by: 'name,short_description,sku',
+                    highlight_full_fields: 'name,sku'
                 })
 
 
@@ -45,21 +50,17 @@ $catalogSearchHelper = $this->helper('catalogsearch');
                             item( { item, html }) {
                                 // Attempt to find highlights for 'brand' and 'name', defaulting to plain text if not present
                                 const nameHighlight = item.highlights.find(h => h.field === 'name');
-                                const brandHighlight = item.highlights.find(h => h.field === 'brand');
                                 const skuHighlight = item.highlights.find(h => h.field === 'sku');
 
-                                const itemUrl = BASE_URL + item.document.request_path;
+                                const itemUrl = '<?= $this->getUrl() ?>' + item.document.request_path;
                                 const nameHtml = nameHighlight ? html`${nameHighlight.value}` : item.document.name;
-                                const brandHtml = brandHighlight ? html`${brandHighlight.value}` : item.document.brand;
                                 const skuHtml = skuHighlight ? html`${skuHighlight.value}` : item.document.sku;
 
                                 return html`
                                 <a href="${itemUrl}">
                                     <span class="autocomplete-name" dangerouslySetInnerHTML=${{__html: nameHtml}}></span>
                                     <span> - </span>
-                                    <b class="autocomplete-brand" dangerouslySetInnerHTML=${{__html: brandHtml}}></b>
-                                    <span> </span>
-                                    <span class="autocomplete-gtx_catalogno" dangerouslySetInnerHTML=${{__html: skuHtml}}></span>
+                                    <span class="autocomplete-sku" dangerouslySetInnerHTML=${{__html: skuHtml}}></span>
                                 </a>
                             `;
                             },
