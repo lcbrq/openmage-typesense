@@ -16,10 +16,10 @@ class LCB_Typesense_Model_Index
     /**
      * @param  Product                   $product
      * @param  AttributesCollection|null $attributes
-     * @return void
+     * @return bool
      * @throws Exception
      */
-    public function reindex(Product $product, ?AttributesCollection $attributes = null): void
+    public function reindex(Product $product, ?AttributesCollection $attributes = null): bool
     {
         if (!$attributes) {
             $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
@@ -37,6 +37,15 @@ class LCB_Typesense_Model_Index
             'thumbnail' => $product->getThumbnail(),
         ]);
 
+        if ($product->getStatus() == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
+            try {
+                $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents[$product->getId()]->delete();
+            } catch (Exception $e) {
+                // Could not find a document with id
+            }
+            return false;
+        }
+
         foreach ($attributes as $attribute) {
             $code = $attribute->getAttributeCode();
             if ($attribute->getBackendType() === 'decimal') {
@@ -53,8 +62,34 @@ class LCB_Typesense_Model_Index
         Mage::dispatchEvent('lcb_typesense_catalog_product_upsert_before', array('product' => $product, 'payload' => $payload));
 
         $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert($payload->getData());
+
+        return true;
     }
 
+    /**
+     * @param int $productId
+     * return void
+     */
+    public function reindexProductById(int $productId): void
+    {
+        $collection = Mage::getModel('catalog/product')->getCollection()
+                   ->addFieldToFilter('entity_id', $productId)
+                   ->addAttributeToSelect('sku')
+                   ->addAttributeToSelect('url_key')
+                   ->addAttributeToSelect('thumbnail');
+
+        $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
+        foreach ($attributes as $attribute) {
+            $collection->addAttributeToSelect($attribute->getAttributeCode());
+        }
+
+        $product = $collection->getFirstItem();
+        $this->reindex($product, $attributes);
+    }
+
+    /**
+     * return Client
+     */
     protected function getClient(): Client
     {
         if (empty($this->client)) {
