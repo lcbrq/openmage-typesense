@@ -28,12 +28,18 @@ class LCB_Typesense_Model_Index
         Mage::dispatchEvent('lcb_typesense_catalog_product_reindex_before', array('product' => $product, 'attributes' => $attributes));
 
         $requestPath = $product->getRequestPath();
+
+        $categoryIds = [];
+        foreach ($product->getCategoryIds() as $categoryId) {
+            $categoryIds[] = (string) $categoryId;
+        }
+
         $payload = new Varien_Object([
             'id' => (string) $product->getId(),
             'sku' => (string) $product->getSku(),
             'url_key' => (string) $product->getUrlKey(),
             'request_path' => $requestPath ? (string) $product->getRequestPath() : 'catalog/product/view/id/' . $product->getId(),
-            'category_ids' => $product->getCategoryIds(),
+            'category_ids' => $categoryIds,
             'thumbnail' => $product->getThumbnail(),
         ]);
 
