@@ -1,7 +1,7 @@
 {
     "name": "lcbrq/openmage-typesense",
-    "license": ["commercial"],
-    "type": "openmage-module",
+    "license": ["proprietary"],
+    "type": "magento-module",
     "description": "Basic approach to lightning-fast, open source Typesense search for OpenMage.",
     "require": {
         "typesense/typesense-php": "*",
