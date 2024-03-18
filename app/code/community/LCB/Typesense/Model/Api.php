@@ -220,7 +220,7 @@ class LCB_Typesense_Model_Api
     public function search($query, $filters = []): array
     {
         $hash = md5(json_encode($filters));
-        if (!$this->results[$hash]) {
+        if (!isset($this->results[$hash])) {
             $queryBy = ['name'];
             $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
             foreach ($attributes as $attribute) {
