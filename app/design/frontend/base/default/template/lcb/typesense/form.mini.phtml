@@ -77,7 +77,7 @@ $catalogSearchHelper = $this->helper('catalogsearch');
 
 <?php else: ?>
 
-    <form id="search_mini_form" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+    <form id="search_mini_form" action="<?php echo $this->getUrl('typesense/search') ?>" method="get">
         <div class="input-box">
             <label for="search"><?php echo $this->__('Search:') ?></label>
             <input id="search" type="search" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text required-entry" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" placeholder="<?php echo $this->quoteEscape($this->__('Search entire store here...')) ?>" />
