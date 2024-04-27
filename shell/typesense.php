@@ -3,7 +3,7 @@
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2023, LeftCurlyBracket
  */
-require_once 'abstract.php';
+require_once dirname($_SERVER['SCRIPT_FILENAME']) . '/abstract.php';
 
 class LCB_Typesense_Shell extends Mage_Shell_Abstract
 {
