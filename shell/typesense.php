@@ -19,11 +19,32 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
     {
         session_start();
 
-        $storeId = $this->getArg('store-id') ? (int) $this->getArg('store-id') : Mage_Core_Model_App::DISTRO_STORE_ID;
+        $storeId = $this->getArg('store-id') !== false ? (int) $this->getArg('store-id') : Mage_Core_Model_App::DISTRO_STORE_ID;
         Mage::app()->setCurrentStore($storeId);
 
         if ($this->getArg('reindex-all')) {
             $collection = $this->getProductCollection();
+            $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
+            foreach ($collection as $product) {
+                $this->updateSingleProduct($product);
+            }
+
+            return true;
+        }
+
+        if ($this->getArg('reindex-all-enabled')) {
+            $collection = $this->getProductCollection();
+            $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
+            $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
+            foreach ($collection as $product) {
+                $this->updateSingleProduct($product);
+            }
+
+            return true;
+        }
+
+        if ($productId = $this->getArg('reindex-product-id')) {
+            $collection = $this->getProductCollection()->addFieldToFilter('entity_id', $productId);
             $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
             foreach ($collection as $product) {
                 $this->updateSingleProduct($product);
@@ -71,11 +92,13 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
 
    Usage:  php typesense.php [options]
 
-  -h                  Short alias for help
-  -reindex-all        Reindex all products
-  -reindex-from-id    Reindex from given product id
-  -reindex-from-date  Reindex from date given in Y-m-d format
-  -store-id           Store identifier
+  -h                    Short alias for help
+  -reindex-all          Reindex all products
+  -reindex-all-enabled  Reindex all enabled products
+  -reindex-product-id   Reindex single product by id
+  -reindex-from-id      Reindex from given product id
+  -reindex-from-date    Reindex from date given in Y-m-d format
+  -store-id             Store identifier
 
 USAGE;
     }
@@ -89,7 +112,6 @@ USAGE;
                             ->addAttributeToSelect('sku')
                             ->addAttributeToSelect('thumbnail')
                             ->addAttributeToSelect('url_key');
-        $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
 
         foreach ($this->getAttributes() as $attribute) {
             $collection->addAttributeToSelect($attribute->getAttributeCode());

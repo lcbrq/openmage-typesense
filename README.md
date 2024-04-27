@@ -16,6 +16,8 @@ composer require php-http/message-factory
 
 # CLI
 
-`php typesense.php --reindex-all` Reindex all enabled products
+`php typesense.php --reindex-all` Reindex all products
+`php typesense.php --reindex-all-enabled` Reindex all enabled products
+`php typesense.php --reindex-product-id` Reindex given product id
 `php typesense.php --reindex-from-date` Reindex all products since given created_at date
 `php typesense.php --reindex-from-id` Reindex all products from given id
