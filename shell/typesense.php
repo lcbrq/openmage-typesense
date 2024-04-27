@@ -53,8 +53,12 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
             return true;
         }
 
-        if ($fromId = $this->getArg('reindex-from-id')) {
-            $collection = $this->getProductCollection()->addFieldToFilter('entity_id', array('gt' => $fromId));
+        if ($updateFromPeriod = $this->getArg('reindex-from-period')) {
+            $updateFromDate = strtotime($updateFromPeriod);
+            if (!$updateFromDate || !$this->validateDate(date('Y-m-d', $updateFromDate))) {
+                return $this->writeln('Invalid period given');
+            }
+            $collection = $this->getProductCollection()->addFieldToFilter('updated_at', array('gt' => date('Y-m-d', $updateFromDate)));
             $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
             foreach ($collection as $product) {
                 $this->updateSingleProduct($product);
@@ -68,6 +72,16 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
                 return $this->writeln('Please specify from-date in Y-m-d format');
             }
             $collection = $this->getProductCollection()->addFieldToFilter('updated_at', array('gt' => $updatedFromDate));
+            $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
+            foreach ($collection as $product) {
+                $this->updateSingleProduct($product);
+            }
+
+            return true;
+        }
+
+        if ($fromId = $this->getArg('reindex-from-id')) {
+            $collection = $this->getProductCollection()->addFieldToFilter('entity_id', array('gt' => $fromId));
             $this->writeln(sprintf("Found %s products to reindex", $collection->getSize()));
             foreach ($collection as $product) {
                 $this->updateSingleProduct($product);
@@ -92,13 +106,14 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
 
    Usage:  php typesense.php [options]
 
-  -h                    Short alias for help
-  -reindex-all          Reindex all products
-  -reindex-all-enabled  Reindex all enabled products
-  -reindex-product-id   Reindex single product by id
-  -reindex-from-id      Reindex from given product id
-  -reindex-from-date    Reindex from date given in Y-m-d format
-  -store-id             Store identifier
+  --h                    Short alias for help
+  --reindex-all          Reindex all products
+  --reindex-all-enabled  Reindex all enabled products
+  --reindex-product-id   Reindex single product by id
+  --reindex-from-id      Reindex from given product id
+  --reindex-from-date    Reindex from date given in Y-m-d format
+  --reindex-from-period    Reindex by given strtotime period
+  --store-id             Store identifier
 
 USAGE;
     }
@@ -129,12 +144,14 @@ USAGE;
     protected function updateSingleProduct($product)
     {
         try {
+            $id = $product->getId();
+            $sku = $product->getSku();
             Mage::getSingleton('lcb_typesense/index')->reindex($product, $this->getAttributes());
-            $this->writeln("\033[0;32m" .  sprintf('Reindexed SKU %s', $product->getSku()) . "\033[0m");
+            $this->writeln("\033[0;32m" .  sprintf('Reindexed ID %s, SKU %s', $id, $sku) . "\033[0m");
         } catch (Exception $e) {
-            $this->writeln("\033[0;33m" . $e->getMessage() . "\033[0m");
+            $this->writeln("\033[0;33m" . sprintf('ID %s, SKU %s - %s', $id, $sku, $e->getMessage()) . "\033[0m");
         } catch (Error $e) {
-            $this->writeln("\033[0;31m" . $e->getMessage() . "\033[0m");
+            $this->writeln("\033[0;31m" . sprintf('ID %s, SKU %s - %s', $id, $sku, $e->getMessage()) . "\033[0m");
         }
     }
 

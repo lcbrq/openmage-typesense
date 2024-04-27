@@ -40,7 +40,7 @@ class LCB_Typesense_Model_Index
             'url_key' => (string) $product->getUrlKey(),
             'request_path' => $requestPath ? (string) $product->getRequestPath() : 'catalog/product/view/id/' . $product->getId(),
             'category_ids' => $categoryIds,
-            'thumbnail' => $product->getThumbnail(),
+            'thumbnail' => (string) $product->getThumbnail(),
         ]);
 
         if ($product->getStatus() == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
