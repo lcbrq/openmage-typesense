@@ -10,9 +10,9 @@ $catalogSearchHelper = $this->helper('catalogsearch');
 
     <script>
         let typesenseClient = new Typesense.Client({
-            'nearestNode': {'host': '<?= Mage::helper('lcb_typesense')->getHost() ?>', 'port': '443', 'protocol': 'https'},
+            'nearestNode': {'host': '<?= $this->getAutocompleteUrl()  ?>','protocol': '<?= $this->getAutocompleteProtocol() ?>'},
             'nodes': [
-                {'host': '<?= Mage::helper('lcb_typesense')->getHost() ?>', 'port': '443', 'protocol': 'https'},
+                {'host': '<?= $this->getAutocompleteUrl() ?>', 'protocol': '<?= $this->getAutocompleteProtocol() ?>'},
             ],
             'apiKey': '<?= Mage::helper('lcb_typesense')->getSearchOnlyApiKey() ?>',
             'connectionTimeoutSeconds': 2

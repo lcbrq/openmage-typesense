@@ -13,6 +13,11 @@ class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @var string
      */
+    private const XPATH_TYPESENSE_AUTOCOMPLETE_TYPE = 'lcb_typesense/autocomplete/type';
+
+    /**
+     * @var string
+     */
     private const XPATH_TYPESENSE_HOST = 'lcb_typesense/connection/host';
 
     /**
@@ -41,6 +46,14 @@ class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
     public function getAutocompleteEnabled(): bool
     {
         return Mage::getStoreConfigFlag(self::XPATH_TYPESENSE_AUTOCOMPLETE_ENABLED, Mage::app()->getStore()->getId());
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAutocompleteType(): ?string
+    {
+        return Mage::getStoreConfig(self::XPATH_TYPESENSE_AUTOCOMPLETE_TYPE, Mage::app()->getStore()->getId());
     }
 
     /**
