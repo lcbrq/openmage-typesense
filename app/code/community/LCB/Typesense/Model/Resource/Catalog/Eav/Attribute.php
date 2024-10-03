@@ -26,6 +26,10 @@ class LCB_Typesense_Model_Resource_Catalog_Eav_Attribute extends Mage_Catalog_Mo
                 break;
         }
 
+        if ($this->getSourceModel() && Mage::getModel($this->getSourceModel()) instanceof Mage_Eav_Model_Entity_Attribute_Source_Boolean) {
+            $type = 'bool';
+        }
+
         return $type;
     }
 }

@@ -27,8 +27,9 @@ class LCB_Typesense_Model_Attribute_Api extends LCB_Typesense_Model_Api
 
         if ($isSearchable || $isFilterable) {
             $type = Mage::getResourceModel('lcb_typesense/catalog_eav_attribute')
-                    ->setBackendType($attribute->getBackendType())
-                    ->getTypesenseType();
+                ->setBackendType($attribute->getBackendType())
+                ->setSourceModel($attribute->getSourceModel())
+                ->getTypesenseType();
             $payload = [
               'fields'    => [
                 [
@@ -41,7 +42,7 @@ class LCB_Typesense_Model_Attribute_Api extends LCB_Typesense_Model_Api
             $client->collections[Mage::helper('lcb_typesense')->getCollectionName()]->update($payload);
         }
 
-        if ($fieldExists && !$isSearchable) {
+        if ($fieldExists && (!$isSearchable || !$isFilterable)) {
             $payload = [
               'fields'    => [
                 [
