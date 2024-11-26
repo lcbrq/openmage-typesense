@@ -34,6 +34,14 @@
                     </lcb_typesense_catalog_product_save_after>
                 </observers>
             </catalog_product_save_after>
+            <catalog_product_delete_after>
+                <observers>
+                    <lcb_typesense_catalog_product_delete_after>
+                        <class>lcb_typesense/observer</class>
+                        <method>deleteProductAfter</method>
+                    </lcb_typesense_catalog_product_delete_after>
+                </observers>
+            </catalog_product_delete_after>
         </events>
     </global>
     <adminhtml>

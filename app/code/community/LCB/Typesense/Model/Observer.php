@@ -74,4 +74,23 @@ class LCB_Typesense_Model_Observer
             Mage::helper('lcb_typesense')->log($e->getMessage());
         }
     }
+
+    /**
+     * Delete product in Typesense
+     *
+     * @param Varien_Event_Observer
+     * @return void
+     */
+    public function deleteProductAfter($observer): void
+    {
+        $product = $observer->getProduct();
+
+        try {
+            Mage::getModel('lcb_typesense/index')->delete($product->getId());
+        } catch (Exception $e) {
+            Mage::helper('lcb_typesense')->log($e->getMessage());
+        } catch (Error $e) {
+            Mage::helper('lcb_typesense')->log($e->getMessage());
+        }
+    }
 }

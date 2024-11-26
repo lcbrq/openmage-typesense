@@ -94,6 +94,19 @@ class LCB_Typesense_Model_Index
     }
 
     /**
+     * @param int $productId
+     * return void
+     */
+    public function deleteProductById(int $productId): void
+    {
+        try {
+            $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents[$productId]->delete();
+        } catch (Exception $e) {
+            // Could not find a document with id
+        }
+    }
+
+    /**
      * return Client
      */
     protected function getClient(): Client
