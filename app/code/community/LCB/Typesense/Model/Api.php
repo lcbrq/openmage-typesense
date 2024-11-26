@@ -106,6 +106,7 @@ class LCB_Typesense_Model_Api
                 'thumbnail' => true,
             ],
         ];
+
         foreach ($attributes as $attribute) {
             if (!in_array($attribute->getAttributeCode(), ['sku', 'status', 'visibility'])) {
                 $fields[] = [
@@ -114,12 +115,14 @@ class LCB_Typesense_Model_Api
                 ];
             }
         }
-        $payload = [
+        $payload = new Varien_Object([
             'name' => Mage::helper('lcb_typesense')->getCollectionName(),
             'fields' => $fields,
-        ];
+        ]);
 
-        $this->getAdminClient()->collections->create($payload);
+        Mage::dispatchEvent('lcb_typesense_collection_create', array('payload' => $payload));
+
+        $this->getAdminClient()->collections->create($payload->getData());
     }
 
     /**
