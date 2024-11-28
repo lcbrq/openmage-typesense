@@ -93,4 +93,27 @@ class LCB_Typesense_Model_Observer
             Mage::helper('lcb_typesense')->log($e->getMessage());
         }
     }
+
+    /**
+     * Redirect standard search action
+     *
+     * @param Varien_Event_Observer
+     * @return void
+     */
+    public function redirectOnCatalogSearch($observer): void
+    {
+        if (Mage::helper('lcb_typesense')->getRedirectCatalogSearch()) {
+            $controller = $observer->getEvent()->getControllerAction();
+            $request = $controller->getRequest();
+            $queryParams = $request->getQuery();
+
+            $typesenseUrl = Mage::getUrl('typesense');
+            $queryString = http_build_query($queryParams);
+            $redirectUrl = $typesenseUrl . '?' . $queryString;
+
+            $controller->getResponse()
+                ->setRedirect($redirectUrl)
+                ->sendResponse();
+        }
+    }
 }

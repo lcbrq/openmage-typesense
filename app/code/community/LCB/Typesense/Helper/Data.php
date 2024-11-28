@@ -38,6 +38,11 @@ class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @var string
      */
+    private const REDIRECT_CATALOG_SEARCH = 'lcb_typesense/connection/redirect_catalog_search';
+
+    /**
+     * @var string
+     */
     private const TYPESENSE_LOG_FILE = 'typesense.log';
 
     /**
@@ -88,6 +93,14 @@ class LCB_Typesense_Helper_Data extends Mage_Core_Helper_Abstract
     public function getSearchOnlyApiKey(): ?string
     {
         return Mage::getStoreConfig(self::XPATH_TYPESENSE_SEARCH_ONLY_API_KEY, Mage::app()->getStore()->getId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRedirectCatalogSearch(): bool
+    {
+        return Mage::getStoreConfigFlag(self::REDIRECT_CATALOG_SEARCH, Mage::app()->getStore()->getId());
     }
 
     /**

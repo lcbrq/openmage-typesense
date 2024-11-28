@@ -81,5 +81,16 @@
                 </lcb_typesense>
             </updates>
         </layout>
+        <events>
+            <controller_action_predispatch_catalogsearch_result_index>
+                <observers>
+                    <lcb_typesense_controller_action_predispatch_catalogsearch_result_index>
+                        <type>singleton</type>
+                        <class>lcb_typesense/observer</class>
+                        <method>redirectOnCatalogSearch</method>
+                    </lcb_typesense_controller_action_predispatch_catalogsearch_result_index>
+                </observers>
+            </controller_action_predispatch_catalogsearch_result_index>
+        </events>
     </frontend>
 </config>
