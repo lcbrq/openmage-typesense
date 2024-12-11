@@ -216,6 +216,20 @@ class LCB_Typesense_Model_Api
     }
 
     /**
+     * @param array $synonyms
+     * @return array
+     */
+    public function updateSynonyms($synonyms): array
+    {
+        $results = [];
+        foreach ($synonyms as $key => $synonym) {
+            $results[] = $this->getAdminClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->synonyms->upsert($key, $synonym);
+        }
+
+        return $results;
+    }
+
+    /**
      * @param  string $query
      * @param  array  $filters
      * @return array

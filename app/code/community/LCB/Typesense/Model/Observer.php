@@ -21,14 +21,36 @@ class LCB_Typesense_Model_Observer
         $section = $observer->getSection();
 
         if ($section === self::ADMIN_SECTION_NAME) {
+            $client = Mage::getModel('lcb_typesense/api');
+
             try {
-                $client = Mage::getModel('lcb_typesense/api')->createCollection();
+                $client->createCollection();
             } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                Mage::getSingleton('adminhtml/session')->addNotice($e->getMessage());
                 Mage::helper('lcb_typesense')->log($e->getMessage());
             } catch (Error $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::helper('lcb_typesense')->log($e->getMessage());
+            }
+
+            if ($serializedSynonyms = Mage::getStoreConfig('lcb_typesense/additional/synonyms')) {
+                try {
+                    if ($deserializedSynonyms = (array) unserialize($serializedSynonyms)) {
+                        $synonyms = [];
+                        foreach ($deserializedSynonyms as $key => $row) {
+                            if ($synonymsArray = explode(',', $row['synonyms'])) {
+                                $synonyms[$key] = [
+                                    'id' => $key,
+                                    'root' => $synonymsArray['0'],
+                                    'synonyms' => $synonymsArray,
+                                ];
+                            }
+                            $client->updateSynonyms($synonyms);
+                        }
+                    }
+                } catch (Exception $e) {
+                    Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                }
             }
         }
     }
