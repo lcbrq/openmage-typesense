@@ -19,14 +19,19 @@ class LCB_Typesense_Model_Api
     private $results = [];
 
     /**
+     * @var int|null
+     */
+    private $storeId = null;
+
+    /**
      * Get Typesense admin client instance
      *
      * @return Client
      */
     public function getAdminClient(): Client
     {
-        $apiHost = Mage::helper('lcb_typesense')->getHost();
-        $apiKey = Mage::helper('lcb_typesense')->getAdminApiKey();
+        $apiHost = Mage::helper('lcb_typesense')->getHost($this->storeId);
+        $apiKey = Mage::helper('lcb_typesense')->getAdminApiKey($this->storeId);
 
         return new Client(
             [
@@ -50,8 +55,8 @@ class LCB_Typesense_Model_Api
      */
     public function getSearchClient(): Client
     {
-        $apiHost = Mage::helper('lcb_typesense')->getHost();
-        $apiKey = Mage::helper('lcb_typesense')->getSearchOnlyApiKey();
+        $apiHost = Mage::helper('lcb_typesense')->getHost($this->storeId);
+        $apiKey = Mage::helper('lcb_typesense')->getSearchOnlyApiKey($this->storeId);
 
         return new Client(
             [
@@ -116,7 +121,7 @@ class LCB_Typesense_Model_Api
             }
         }
         $payload = new Varien_Object([
-            'name' => Mage::helper('lcb_typesense')->getCollectionName(),
+            'name' => Mage::helper('lcb_typesense')->getCollectionName($this->storeId),
             'fields' => $fields,
         ]);
 
@@ -264,5 +269,15 @@ class LCB_Typesense_Model_Api
         }
 
         return $this->results[$hash];
+    }
+
+    /**
+     * @param int $storeId
+     * @return $this
+     */
+    public function setStoreId($storeId): self
+    {
+        $this->storeId = $storeId;
+        return $this;
     }
 }

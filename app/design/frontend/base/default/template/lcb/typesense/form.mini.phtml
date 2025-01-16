@@ -30,7 +30,7 @@ $catalogSearchHelper = $this->helper('catalogsearch');
 
             },
             async getSources( {query}) {
-                const results = await typesenseClient.collections('<?= Mage::helper('lcb_typesense')->getCollectionName() ?>').documents().search({
+                const results = await typesenseClient.collections('<?= $this->getCollectionName() ?>').documents().search({
                     q: query,
                     query_by: 'name,short_description,sku',
                     highlight_full_fields: 'name,sku'

@@ -8,6 +8,13 @@ class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
     /**
      * @return string
      */
+    public function getCollectionName()
+    {
+        return Mage::helper('lcb_typesense')->getCollectionName($this->getStoreId());
+    }
+    /**
+     * @return string
+     */
     public function getResultUrl()
     {
         return $this->getUrl('typesense/search');
@@ -18,7 +25,7 @@ class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
      */
     public function isAutocompleteEnabled()
     {
-        return Mage::helper('lcb_typesense')->getAutocompleteEnabled();
+        return Mage::helper('lcb_typesense')->getAutocompleteEnabled($this->getStoreId());
     }
 
     /**
@@ -30,7 +37,7 @@ class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
             return str_replace(['http://', 'https://'], '', $this->getUrl('lcb_typesense/search/algolia'));
         }
 
-        return Mage::helper('lcb_typesense')->getHost();
+        return Mage::helper('lcb_typesense')->getHost($this->getStoreId());
     }
 
     /**
@@ -38,12 +45,20 @@ class LCB_Typesense_Block_Searchbox extends Mage_Core_Block_Template
      */
     public function getAutocompleteProtocol()
     {
-        if (Mage::helper('lcb_typesense')->getAutocompleteType() === LCB_Typesense_Model_System_Config_Source_Autocomplete_Type::BACKEND) {
+        if (Mage::helper('lcb_typesense')->getAutocompleteType($this->getStoreId()) === LCB_Typesense_Model_System_Config_Source_Autocomplete_Type::BACKEND) {
             if (strpos($this->getUrl(), 'http:') === 0) {
                 return 'http';
             }
         }
 
         return 'https';
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreId()
+    {
+        return Mage::app()->getStore()->getId();
     }
 }

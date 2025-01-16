@@ -21,7 +21,13 @@ class LCB_Typesense_Model_Observer
         $section = $observer->getSection();
 
         if ($section === self::ADMIN_SECTION_NAME) {
+            $storeCode = $observer->getStore();
+            $store = Mage::app()->getStore($storeCode);
             $client = Mage::getModel('lcb_typesense/api');
+
+            if ($storeId = $store->getId()) {
+                $client->setStoreId($storeId);
+            }
 
             try {
                 $client->createCollection();

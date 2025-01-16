@@ -112,18 +112,25 @@ class LCB_Typesense_Shell extends Mage_Shell_Abstract
   --reindex-product-id   Reindex single product by id
   --reindex-from-id      Reindex from given product id
   --reindex-from-date    Reindex from date given in Y-m-d format
-  --reindex-from-period    Reindex by given strtotime period
+  --reindex-from-period  Reindex by given strtotime period
   --store-id             Store identifier
 
 USAGE;
     }
 
     /**
+     * @param int|null $storeId
      * @return Mage_Catalog_Model_Collection
      */
-    protected function getProductCollection()
+    protected function getProductCollection($storeId = null)
     {
-        $collection = Mage::getModel('catalog/product')->getCollection()
+        $productModel = Mage::getModel('catalog/product');
+
+        if ($storeId) {
+            $productModel->setStoreId($storeId);
+        }
+
+        $collection = $productModel->getCollection()
                             ->addAttributeToSelect('sku')
                             ->addAttributeToSelect('thumbnail')
                             ->addAttributeToSelect('url_key');

@@ -45,7 +45,7 @@ class LCB_Typesense_Model_Index
 
         if ($product->getStatus() == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
             try {
-                $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents[$product->getId()]->delete();
+                $this->getClient($product->getStoreId())->collections[Mage::helper('lcb_typesense')->getCollectionName($product->getStoreId())]->documents[$product->getId()]->delete();
             } catch (Exception $e) {
                 // Could not find a document with id
             }
@@ -67,7 +67,7 @@ class LCB_Typesense_Model_Index
 
         Mage::dispatchEvent('lcb_typesense_catalog_product_upsert_before', array('product' => $product, 'payload' => $payload));
 
-        $this->getClient()->collections[Mage::helper('lcb_typesense')->getCollectionName()]->documents->upsert($payload->getData());
+        $this->getClient($product->getStoreId())->collections[Mage::helper('lcb_typesense')->getCollectionName($product->getStoreId())]->documents->upsert($payload->getData());
 
         return true;
     }
@@ -95,7 +95,7 @@ class LCB_Typesense_Model_Index
 
     /**
      * @param int $productId
-     * return void
+     * @return void
      */
     public function deleteProductById(int $productId): void
     {
@@ -107,12 +107,13 @@ class LCB_Typesense_Model_Index
     }
 
     /**
-     * return Client
+     * @param int|null $storeId
+     * @return Client
      */
-    protected function getClient(): Client
+    protected function getClient($storeId = null): Client
     {
         if (empty($this->client)) {
-            $this->client = Mage::getModel('lcb_typesense/api')->getAdminClient();
+            $this->client = Mage::getModel('lcb_typesense/api')->setStoreId($storeId)->getAdminClient();
         }
 
         return $this->client;
