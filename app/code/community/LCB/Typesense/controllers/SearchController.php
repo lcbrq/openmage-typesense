@@ -73,7 +73,8 @@ class LCB_Typesense_SearchController extends Mage_Core_Controller_Front_Action
                 }
             }
 
-            $document->setData('request_path', $product->getRequestPath());
+            $requestPath = $product->getRequestPath();
+            $document->setData('request_path', $requestPath ? $requestPath : 'catalog/product/view/id/' . $product->getId());
             $document->setData('thumbnail', $product->getThumbnail());
 
             $hits[] = [
