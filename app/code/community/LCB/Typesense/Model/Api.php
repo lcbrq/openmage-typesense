@@ -260,7 +260,11 @@ class LCB_Typesense_Model_Api
 
             if ($filters) {
                 foreach ($filters as $code => $value) {
-                    $filterString = "$code:$value";
+                    if (!is_array($value)) {
+                        $filterString = "$code:$value";
+                    } else {
+                        $filterString = "$code:[" . implode(',', $value) . "]";
+                    }
                 }
                 $payload['filter_by'] = $filterString;
             }
