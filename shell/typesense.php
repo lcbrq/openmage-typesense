@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Tomasz Gregorczyk <tomasz@silpion.com.pl>
  * @copyright (c) 2023, LeftCurlyBracket
