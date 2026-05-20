@@ -26,7 +26,7 @@ class LCB_Typesense_Block_Product_Search_List extends Mage_Catalog_Block_Product
 
         $collection->addFieldToFilter('entity_id', ['in' => $result['ids']]);
         $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
-        $collection->addStoreFilter()->addFinalPrice();
+        $collection->addStoreFilter()->addPriceData();
         $collection->addAttributeToSelect('*');
         $collection->setPageSize($this->getRequest()->getParam('limit', 12))->setCurPage($this->getRequest()->getParam('p', 1));
 

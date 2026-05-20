@@ -24,7 +24,7 @@ class LCB_Typesense_Model_Layer extends Mage_CatalogSearch_Model_Layer
         $collection = Mage::getModel('catalog/product')->getCollection();
         $collection->addFieldToFilter('entity_id', ['in' => $result['ids']]);
         $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
-        $collection->addStoreFilter()->addFinalPrice();
+        $collection->addStoreFilter()->addPriceData();
         $collection->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes());
 
         return $collection;
