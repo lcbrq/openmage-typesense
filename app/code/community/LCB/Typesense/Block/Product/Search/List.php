@@ -21,7 +21,8 @@ class LCB_Typesense_Block_Product_Search_List extends Mage_Catalog_Block_Product
         $filters = $this->getRequest()->getParam('fq');
         $result = Mage::getSingleton('lcb_typesense/api')->searchIds($query, $filters);
         if (!$result['count']) {
-            return new Varien_Data_Collection();
+            $collection->addFieldToFilter('entity_id', array('eq' => 0));
+            return $collection;
         }
 
         $collection->addFieldToFilter('entity_id', ['in' => $result['ids']]);
